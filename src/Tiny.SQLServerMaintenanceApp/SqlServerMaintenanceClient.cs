@@ -50,7 +50,6 @@ namespace Tiny.SQLServerMaintenanceApp
 
                 return result;
             }
-
         }
     }
 
