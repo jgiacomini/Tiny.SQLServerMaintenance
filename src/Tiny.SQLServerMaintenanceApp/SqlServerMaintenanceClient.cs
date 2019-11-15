@@ -30,7 +30,7 @@ namespace Tiny.SQLServerMaintenanceApp
             {
                 SqlCommand command = new SqlCommand(SQL, connection);
                 await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-                List<Statistiques> result = new List<Statistiques>();
+                var result = new List<Statistiques>();
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     if (reader.HasRows)
@@ -40,9 +40,9 @@ namespace Tiny.SQLServerMaintenanceApp
                             result.Add(new Statistiques()
                             {
                                 FragmentationInPercent = (double)reader["FragmentationInPercent"],
-                                SchemaName = reader["SchemaName"] == DBNull.Value ? null : (string)reader["SchemaName"],
-                                TableName = (string)reader["TableName"],
-                                IndexName = (string)reader["IndexName"],
+                                SchemaName = ReadString(reader["SchemaName"]),
+                                TableName = ReadString(reader["TableName"]),
+                                IndexName = ReadString(reader["IndexName"]),
                             });
                         }
                     }
@@ -50,6 +50,11 @@ namespace Tiny.SQLServerMaintenanceApp
 
                 return result;
             }
+        }
+
+        private static string ReadString(object value)
+        {
+            return value == DBNull.Value ? null : (string)value;
         }
     }
 
