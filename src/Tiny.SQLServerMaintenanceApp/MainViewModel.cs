@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using System.Collections.ObjectModel;
 
 namespace Tiny.SQLServerMaintenanceApp
 {
@@ -10,6 +11,8 @@ namespace Tiny.SQLServerMaintenanceApp
         public MainViewModel()
         {
             GetFragmentationCommand = new RelayCommand(GetFragmentation);
+            _connectionString = AppSettings.Default.ConnectionString;
+            Framgmentations = new ObservableCollection<FramgmentationModel>();
         }
 
         public string ConnectionString
@@ -20,7 +23,11 @@ namespace Tiny.SQLServerMaintenanceApp
             }
             set
             {
-                Set(ref _connectionString, value);
+                if (Set(ref _connectionString, value))
+                {
+                    AppSettings.Default.ConnectionString = value;
+                    AppSettings.Default.Save();
+                }
             }
         }
 
@@ -31,7 +38,12 @@ namespace Tiny.SQLServerMaintenanceApp
             IsBusy = true;
             try
             {
-                var framentation = await sqlServerMaintenanceClient.GetFragmentationAsync();
+                var fragmentations = await sqlServerMaintenanceClient.GetFragmentationAsync();
+                Framgmentations.Clear();
+                foreach (var item in fragmentations)
+                {
+                    Framgmentations.Add(new FramgmentationModel(item));
+                }
             }
             catch (System.Exception)
             {
@@ -39,6 +51,8 @@ namespace Tiny.SQLServerMaintenanceApp
 
             IsBusy = false;
         }
+
+        public ObservableCollection<FramgmentationModel> Framgmentations { get; private set; }
 
         public RelayCommand GetFragmentationCommand { get; }
         public bool IsBusy
@@ -52,5 +66,21 @@ namespace Tiny.SQLServerMaintenanceApp
                 Set(ref _isBusy, value);
             }
         }
+    }
+
+    public class FramgmentationModel : ObservableObject
+    {
+        public FramgmentationModel(Statistiques statistiques)
+        {
+            FragmentationInPercent = statistiques.FragmentationInPercent;
+            SchemaName = statistiques.SchemaName;
+            TableName = statistiques.TableName;
+            IndexName = statistiques.IndexName;
+        }
+
+        public double FragmentationInPercent { get; private set; }
+        public string SchemaName { get; private set; }
+        public string TableName { get; private set; }
+        public string IndexName { get; private set; }
     }
 }
