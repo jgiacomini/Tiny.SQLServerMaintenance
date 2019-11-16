@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Tiny.SQLServerMaintenance\Tiny.SQLServerMaintenance.csproj" />
+    <ProjectReference Include="..\Tiny.SQLServerMaintenance\Tiny.SQLServerMaintenance.csproj" />
   </ItemGroup>
 
   <ItemGroup>
