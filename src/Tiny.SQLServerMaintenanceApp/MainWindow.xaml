@@ -20,25 +20,34 @@
             TextWrapping="Wrap"
             Text="{Binding Path=ConnectionString}"/>
         
-        <Button 
-            Grid.Row="1"
-            Content="Test" 
-            Command="{Binding Path=GetFragmentationCommand,Mode=OneTime}"/>
-
+   
         <TabControl Grid.Row="2">
             <TabItem Header="Indexes">
-                <ListView ItemsSource="{Binding Path=Framgmentations,Mode=OneWay}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text="{Binding Path=FragmentationInPercent,Mode=OneTime}"/>
-                                <TextBlock Text="{Binding Path=SchemaName,Mode=OneTime}"/>
-                                <TextBlock Text="{Binding Path=TableName,Mode=OneTime}"/>
-                                <TextBlock Text="{Binding Path=IndexName,Mode=OneTime}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button 
+                        Content="Compute fragmentation" 
+                        Command="{Binding Path=GetFragmentationCommand,Mode=OneTime}"/>
+
+                    <ListView
+                        Grid.Row="1"
+                        ItemsSource="{Binding Path=Framgmentations,Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Path=FragmentationInPercent,Mode=OneTime}"/>
+                                    <TextBlock Text="{Binding Path=SchemaName,Mode=OneTime}"/>
+                                    <TextBlock Text="{Binding Path=TableName,Mode=OneTime}"/>
+                                    <TextBlock Text="{Binding Path=IndexName,Mode=OneTime}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
             </TabItem>
         </TabControl>
        
