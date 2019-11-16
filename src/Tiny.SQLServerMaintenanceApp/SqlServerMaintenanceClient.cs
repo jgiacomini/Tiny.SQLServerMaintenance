@@ -9,13 +9,26 @@ namespace Tiny.SQLServerMaintenanceApp
 {
     public class SqlServerMaintenanceClient
     {
-        private const string SQL = @"SELECT avg_fragmentation_in_percent AS FragmentationInPercent,
+        private const string FragmentationSQL = @"SELECT avg_fragmentation_in_percent AS FragmentationInPercent,
                 OBJECT_SCHEMA_NAME(Stats.object_id) AS SchemaName,
                 OBJECT_NAME (Stats.object_id) AS TableName,
                 Indexes.name IndexName
                 FROM sys.dm_db_index_physical_stats(DB_ID(), OBJECT_ID('dbo.T_CLIENT_CLI') , NULL, NULL , 'LIMITED') AS Stats
                 INNER JOIN sys.indexes AS Indexes ON Stats.object_id = Indexes.object_id AND Stats.index_id = Indexes.index_id
                 ORDER BY avg_fragmentation_in_percent DESC";
+
+        private const string NbConnectionsSQL = @"SELECT 
+                DB_NAME(dbid) as DBName, 
+                COUNT(dbid) as NumberOfConnections,
+                loginame as LoginName
+            FROM
+                sys.sysprocesses
+            WHERE 
+                dbid > 0
+            GROUP BY 
+                dbid, loginame";
+
+        private const string ConnectionsDetailsSQL = "sp_who2 'Active'";
 
         private readonly string _connectionString;
 
@@ -28,7 +41,8 @@ namespace Tiny.SQLServerMaintenanceApp
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                SqlCommand command = new SqlCommand(SQL, connection);
+                SqlCommand command = new SqlCommand(FragmentationSQL, connection);
+                command.CommandTimeout = (int)TimeSpan.FromDays(1).TotalSeconds;
                 await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
                 var result = new List<Statistiques>();
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
