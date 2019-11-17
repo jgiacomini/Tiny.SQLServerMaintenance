@@ -12,7 +12,7 @@ namespace Tiny.SQLServerMaintenanceApp
         {
             GetFragmentationCommand = new RelayCommand(GetFragmentation);
             _connectionString = AppSettings.Default.ConnectionString;
-            Fragmentations = new ObservableCollection<FramgmentationModel>();
+            Fragmentations = new ObservableCollection<FragmentationModel>();
         }
 
         public string ConnectionString
@@ -42,7 +42,7 @@ namespace Tiny.SQLServerMaintenanceApp
                 Fragmentations.Clear();
                 foreach (var item in fragmentations)
                 {
-                    Fragmentations.Add(new FramgmentationModel(item));
+                    Fragmentations.Add(new FragmentationModel(item));
                 }
             }
             catch (System.Exception)
@@ -52,7 +52,7 @@ namespace Tiny.SQLServerMaintenanceApp
             IsBusy = false;
         }
 
-        public ObservableCollection<FramgmentationModel> Fragmentations { get; private set; }
+        public ObservableCollection<FragmentationModel> Fragmentations { get; private set; }
 
         public RelayCommand GetFragmentationCommand { get; }
         public bool IsBusy

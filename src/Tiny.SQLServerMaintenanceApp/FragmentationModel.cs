@@ -2,9 +2,9 @@
 
 namespace Tiny.SQLServerMaintenanceApp
 {
-    public class FramgmentationModel : ObservableObject
+    public class FragmentationModel : ObservableObject
     {
-        public FramgmentationModel(Fragmentation statistiques)
+        public FragmentationModel(Fragmentation statistiques)
         {
             FragmentationInPercent = statistiques.FragmentationInPercent;
             SchemaName = statistiques.SchemaName;
