@@ -12,7 +12,7 @@ namespace Tiny.SQLServerMaintenanceApp
         {
             GetFragmentationCommand = new RelayCommand(GetFragmentation);
             _connectionString = AppSettings.Default.ConnectionString;
-            Framgmentations = new ObservableCollection<FramgmentationModel>();
+            Fragmentations = new ObservableCollection<FramgmentationModel>();
         }
 
         public string ConnectionString
@@ -39,10 +39,10 @@ namespace Tiny.SQLServerMaintenanceApp
             try
             {
                 var fragmentations = await sqlServerMaintenanceClient.GetFragmentationAsync();
-                Framgmentations.Clear();
+                Fragmentations.Clear();
                 foreach (var item in fragmentations)
                 {
-                    Framgmentations.Add(new FramgmentationModel(item));
+                    Fragmentations.Add(new FramgmentationModel(item));
                 }
             }
             catch (System.Exception)
@@ -52,7 +52,7 @@ namespace Tiny.SQLServerMaintenanceApp
             IsBusy = false;
         }
 
-        public ObservableCollection<FramgmentationModel> Framgmentations { get; private set; }
+        public ObservableCollection<FramgmentationModel> Fragmentations { get; private set; }
 
         public RelayCommand GetFragmentationCommand { get; }
         public bool IsBusy
@@ -66,21 +66,5 @@ namespace Tiny.SQLServerMaintenanceApp
                 Set(ref _isBusy, value);
             }
         }
-    }
-
-    public class FramgmentationModel : ObservableObject
-    {
-        public FramgmentationModel(Statistiques statistiques)
-        {
-            FragmentationInPercent = statistiques.FragmentationInPercent;
-            SchemaName = statistiques.SchemaName;
-            TableName = statistiques.TableName;
-            IndexName = statistiques.IndexName;
-        }
-
-        public double FragmentationInPercent { get; private set; }
-        public string SchemaName { get; private set; }
-        public string TableName { get; private set; }
-        public string IndexName { get; private set; }
     }
 }

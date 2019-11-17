@@ -35,7 +35,7 @@
 
                     <ListView
                         Grid.Row="1"
-                        ItemsSource="{Binding Path=Framgmentations,Mode=OneWay}">
+                        ItemsSource="{Binding Path=Fragmentations,Mode=OneWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
