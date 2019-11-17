@@ -37,21 +37,21 @@ namespace Tiny.SQLServerMaintenanceApp
             _connectionString = connectionString;
         }
 
-        public async Task<List<Statistiques>> GetFragmentationAsync(CancellationToken cancellationToken = default)
+        public async Task<List<Fragmentation>> GetFragmentationAsync(CancellationToken cancellationToken = default)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(FragmentationSQL, connection);
                 command.CommandTimeout = (int)TimeSpan.FromDays(1).TotalSeconds;
                 await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-                var result = new List<Statistiques>();
+                var result = new List<Fragmentation>();
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
                 {
                     if (reader.HasRows)
                     {
                         while (await reader.ReadAsync().ConfigureAwait(false))
                         {
-                            result.Add(new Statistiques()
+                            result.Add(new Fragmentation()
                             {
                                 FragmentationInPercent = (double)reader["FragmentationInPercent"],
                                 SchemaName = ReadString(reader["SchemaName"]),
@@ -70,13 +70,5 @@ namespace Tiny.SQLServerMaintenanceApp
         {
             return value == DBNull.Value ? null : (string)value;
         }
-    }
-
-    public class Statistiques
-    {
-        public double FragmentationInPercent { get; set; }
-        public string SchemaName { get; set; }
-        public string TableName { get; set; }
-        public string IndexName { get; set; }
     }
 }
