@@ -28,7 +28,11 @@ namespace Tiny.SQLServerMaintenanceApp
             GROUP BY 
                 dbid, loginame";
 
+        private const string CompatibilityMode = "SELECT name, compatibility_level FROM sys.databases;";
+
         private const string ConnectionsDetailsSQL = "sp_who2 'Active'";
+
+        //// private const string "select @@version as version";
 
         private readonly string _connectionString;
 
