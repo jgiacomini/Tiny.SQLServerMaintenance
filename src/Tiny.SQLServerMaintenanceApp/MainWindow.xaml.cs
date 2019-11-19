@@ -10,7 +10,7 @@ namespace Tiny.SQLServerMaintenanceApp
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
+            DataContext = new ChooseServerViewModel();
         }
     }
 }

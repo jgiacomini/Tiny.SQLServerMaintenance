@@ -5,11 +5,6 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Assets\loader.png" />
-  </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Assets\loader.png" />
   </ItemGroup>
