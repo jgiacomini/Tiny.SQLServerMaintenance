@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="Tiny.SQLServerMaintenanceApp.Pages.Diagnostic.DiagnosticPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Tiny.SQLServerMaintenanceApp.Pages.Diagnostic"
+             xmlns:controls="clr-namespace:Tiny.SQLServerMaintenanceApp.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox 
+            Height="100"
+            TextWrapping="Wrap"
+            Text="{Binding Path=ConnectionString}"/>
+
+
+        <TabControl Grid.Row="2">
+            <TabItem Header="Indexes">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Button 
+                        Content="Compute fragmentation" 
+                        Command="{Binding Path=GetFragmentationCommand,Mode=OneTime}"/>
+
+                    <ListView
+                        Grid.Row="1"
+                        ItemsSource="{Binding Path=Fragmentations,Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Path=FragmentationInPercent,Mode=OneTime}"/>
+                                    <TextBlock Text="{Binding Path=SchemaName,Mode=OneTime}"/>
+                                    <TextBlock Text="{Binding Path=TableName,Mode=OneTime}"/>
+                                    <TextBlock Text="{Binding Path=IndexName,Mode=OneTime}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <controls:Loader Grid.RowSpan="3"
+               Visibility="{Binding Path=IsBusy,Mode=OneWay,FallbackValue=Collapsed,Converter={StaticResource BooleanToVisibilityConverter}}"
+               VerticalAlignment="Center"
+               HorizontalAlignment="Center"/>
+
+
+    </Grid>
+</UserControl>
