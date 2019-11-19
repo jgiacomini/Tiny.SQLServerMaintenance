@@ -53,8 +53,8 @@
        
         <Image Source="/Assets/loader.png" 
                Grid.RowSpan="3"
-               Width="100" 
-               Height="100"
+               Width="50" 
+               Height="50"
                Visibility="{Binding Path=IsBusy,Mode=OneWay,FallbackValue=Collapsed,Converter={StaticResource BooleanToVisibilityConverter}}"
                RenderTransformOrigin="0.5, 0.5"
                VerticalAlignment="Center"
