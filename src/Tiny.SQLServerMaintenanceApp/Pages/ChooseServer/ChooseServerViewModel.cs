@@ -17,7 +17,7 @@ namespace Tiny.SQLServerMaintenanceApp
 
             if (!string.IsNullOrWhiteSpace(serversJson))
             {
-                JsonSerializer.Deserialize<List<Server>>(serversJson);
+                servers = JsonSerializer.Deserialize<List<Server>>(serversJson);
             }
 
             if (servers == null)
@@ -46,6 +46,7 @@ namespace Tiny.SQLServerMaintenanceApp
         private void SaveServers()
         {
             AppSettings.Default.Servers = JsonSerializer.Serialize(Servers.Select(s => s.GetData()).ToList());
+            AppSettings.Default.Save();
         }
 
         private string _serverName;
