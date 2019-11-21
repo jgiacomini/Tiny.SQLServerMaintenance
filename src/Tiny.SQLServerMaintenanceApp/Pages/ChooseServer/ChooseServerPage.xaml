@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Tiny.SQLServerMaintenanceApp.Pages"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="AliceBlue">
@@ -14,12 +13,18 @@
         <ListView ItemsSource="{Binding Path=Servers,Mode=OneWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
                         <TextBlock Text="{Binding Path=ServerName,Mode=OneTime}"/>
-                        <TextBlock Text="{Binding Path=ConnectionString,Mode=OneTime}"/>
-                        <Button Content="Delete" Command="{Binding Path=DeleteCommand,Mode=OneTime}"/>
-                        <Button Content="View" Command="{Binding Path=ViewCommand,Mode=OneTime}"/>
-                    </StackPanel>
+                        <TextBlock Text="{Binding Path=ConnectionString,Mode=OneTime}" Grid.Row="1"/>
+                        <Button Content="Delete" Command="{Binding Path=DeleteCommand,Mode=OneTime}"  Grid.Row="2"/>
+                        <Button Content="View" Command="{Binding Path=ViewCommand,Mode=OneTime}"  Grid.Row="3"/>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
