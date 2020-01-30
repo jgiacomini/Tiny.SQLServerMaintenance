@@ -57,12 +57,16 @@
 
             <Label Content="Server name :"/>
             <TextBox Text="{Binding Path=ServerName,Mode=TwoWay}"
+                     TextAlignment="Left" 
+                     VerticalContentAlignment="Center"
                      Grid.Column="1"/>
 
             <Label Content="Connection string :" 
                    Grid.Row="1"/>
             <TextBox Text="{Binding Path=ConnectionString,Mode=TwoWay}" 
                      Grid.Row="1" 
+                     TextAlignment="Left" 
+                     VerticalContentAlignment="Center"
                      Grid.Column="1"/>
 
             <Button Content="Add" 

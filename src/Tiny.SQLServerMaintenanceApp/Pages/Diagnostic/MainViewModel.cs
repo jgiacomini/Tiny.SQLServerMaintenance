@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Tiny.SQLServerMaintenanceApp
 {
@@ -9,7 +10,10 @@ namespace Tiny.SQLServerMaintenanceApp
         public MainViewModel()
         {
             GetFragmentationCommand = new RelayCommand(GetFragmentation);
+            FixFragmentationCommand = new RelayCommand(FixFragmentation);
             Fragmentations = new ObservableCollection<FragmentationModel>();
+
+            // AppSettings.Default.ConnectionString = "Server=tcp:nu-mini-db-server-ci.database.windows.net,1433;Initial Catalog=nu-mini-db-prod_Copy_temoin;Persist Security Info=False;User ID=numiniadmin;Password=bjs8974OOFezofi2142vn;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
             _connectionString = AppSettings.Default.ConnectionString;
         }
 
@@ -53,5 +57,22 @@ namespace Tiny.SQLServerMaintenanceApp
         public ObservableCollection<FragmentationModel> Fragmentations { get; private set; }
 
         public RelayCommand GetFragmentationCommand { get; }
+
+        public RelayCommand FixFragmentationCommand { get; }
+
+        private async void FixFragmentation()
+        {
+            var sqlServerMaintenanceClient = new SqlServerMaintenanceClient(ConnectionString);
+            IsBusy = true;
+            foreach (var fragmentation in Fragmentations.Where(f => f.FragmentationInPercent > 50))
+            {
+                if (fragmentation.FragmentationInPercent > 50)
+                {
+                    await sqlServerMaintenanceClient.RebuilFragmentationAsync(fragmentation.SchemaName, fragmentation.TableName).ConfigureAwait(false);
+                }
+            }
+
+            IsBusy = false;
+        }
     }
 }

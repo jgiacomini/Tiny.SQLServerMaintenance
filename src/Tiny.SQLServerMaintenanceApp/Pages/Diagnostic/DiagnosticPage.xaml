@@ -25,14 +25,19 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Button 
                         Content="Compute fragmentation" 
                         Command="{Binding Path=GetFragmentationCommand,Mode=OneTime}"/>
+                    <Button 
+                        Content="Fix fragmentation" 
+                         Grid.Row="1"
+                        Command="{Binding Path=FixFragmentationCommand,Mode=OneTime}"/>
 
                     <ListView
-                        Grid.Row="1"
+                        Grid.Row="2"
                         ItemsSource="{Binding Path=Fragmentations,Mode=OneWay}">
                         <ListView.ItemTemplate>
                             <DataTemplate>

@@ -31,6 +31,8 @@ namespace Tiny.SQLServerMaintenanceApp
         private const string CompatibilityMode = "SELECT name, compatibility_level FROM sys.databases;";
 
         private const string ConnectionsDetailsSQL = "sp_who2 'Active'";
+        private const string CompatibilityLvl = "SELECT compatibility_level FROM[sys].[databases]";
+        private const string ChangeCompatibilityLvl = "ALTER DATABASE database_name SET COMPATIBILITY_LEVEL = 140;";
 
         //// private const string "select @@version as version";
 
@@ -67,6 +69,18 @@ namespace Tiny.SQLServerMaintenanceApp
                 }
 
                 return result;
+            }
+        }
+
+        public async Task<int> RebuilFragmentationAsync(string schemaName, string tableName, CancellationToken cancellationToken = default)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                SqlCommand command = new SqlCommand(FragmentationSQL, connection);
+                command.CommandTimeout = (int)TimeSpan.FromDays(1).TotalSeconds;
+                await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+                command.CommandText = $"ALTER INDEX ALL ON [{schemaName}].[{tableName}] REBUILD";
+                return await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }
 

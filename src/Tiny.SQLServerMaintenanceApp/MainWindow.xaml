@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:Tiny.SQLServerMaintenanceApp"
         xmlns:controls="clr-namespace:Tiny.SQLServerMaintenanceApp.Controls"
         xmlns:pages="clr-namespace:Tiny.SQLServerMaintenanceApp.Pages"
+        xmlns:dia="clr-namespace:Tiny.SQLServerMaintenanceApp.Pages.Diagnostic"
+        
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <pages:ChooseServerPage/>
+    <!--<pages:Di/>-->
+    <dia:DiagnosticPage/>
 </Window>
