@@ -42,10 +42,29 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <TextBlock Text="{Binding Path=FragmentationInPercent,Mode=OneTime}"/>
+                                    <TextBlock Text="{Binding Path=MaxFragmentation,Mode=OneTime}"/>
                                     <TextBlock Text="{Binding Path=SchemaName,Mode=OneTime}"/>
                                     <TextBlock Text="{Binding Path=TableName,Mode=OneTime}"/>
                                     <TextBlock Text="{Binding Path=IndexName,Mode=OneTime}"/>
+
+                                    <TextBlock>
+                                        <Run Text="{Binding Path=TableName,Mode=OneTime}"/>
+                                        <Run Text="{Binding Path=IndexName,Mode=OneTime}"/>
+                                    </TextBlock>
+
+
+                                    <ItemsControl ItemsSource="{Binding Path=Indexes}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock>
+                                                    <Run Text="{Binding Path=IndexName,Mode=OneTime}"/>
+                                                    <Run Text="{Binding Path=FragmentationInPercent,Mode=OneTime}"/>
+                                                </TextBlock>
+
+                                            </DataTemplate>
+                                            
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

@@ -44,7 +44,16 @@ namespace Tiny.SQLServerMaintenanceApp
                 Fragmentations.Clear();
                 foreach (var item in fragmentations)
                 {
-                    Fragmentations.Add(new FragmentationModel(item));
+                    var existingModel = Fragmentations.FirstOrDefault(f => f.SchemaName == item.TableName || f.TableName == item.TableName);
+
+                    if (existingModel == null)
+                    {
+                        Fragmentations.Add(new FragmentationModel(item));
+                    }
+                    else
+                    {
+                        existingModel.Add(new Index(item.IndexName, item.FragmentationInPercent));
+                    }
                 }
             }
             catch (System.Exception)
@@ -64,11 +73,17 @@ namespace Tiny.SQLServerMaintenanceApp
         {
             var sqlServerMaintenanceClient = new SqlServerMaintenanceClient(ConnectionString);
             IsBusy = true;
-            foreach (var fragmentation in Fragmentations.Where(f => f.FragmentationInPercent > 50))
+
+            foreach (var fragmentation in Fragmentations)
             {
-                if (fragmentation.FragmentationInPercent > 50)
+                if (fragmentation.MaxFragmentation > 50)
                 {
                     await sqlServerMaintenanceClient.RebuilFragmentationAsync(fragmentation.SchemaName, fragmentation.TableName).ConfigureAwait(false);
+                }
+
+                if (fragmentation.MaxFragmentation > 30)
+                {
+                    await sqlServerMaintenanceClient.ReorganizeFragmentationAsync(fragmentation.SchemaName, fragmentation.TableName).ConfigureAwait(false);
                 }
             }
 

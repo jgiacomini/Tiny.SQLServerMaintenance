@@ -79,7 +79,23 @@ namespace Tiny.SQLServerMaintenanceApp
                 SqlCommand command = new SqlCommand(FragmentationSQL, connection);
                 command.CommandTimeout = (int)TimeSpan.FromDays(1).TotalSeconds;
                 await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-                command.CommandText = $"ALTER INDEX ALL ON [{schemaName}].[{tableName}] REBUILD";
+
+                // laisse 20% de place par page pour éviter que la fragmentation revienne vite
+                command.CommandText = $"ALTER INDEX ALL ON [{schemaName}].[{tableName}] REBUILD WITH (FILLFACTOR = 80);";
+                return await command.ExecuteNonQueryAsync(cancellationToken);
+            }
+        }
+
+        public async Task<int> ReorganizeFragmentationAsync(string schemaName, string tableName, CancellationToken cancellationToken = default)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                SqlCommand command = new SqlCommand(FragmentationSQL, connection);
+                command.CommandTimeout = (int)TimeSpan.FromDays(1).TotalSeconds;
+                await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+
+                // laisse 20% de place par page pour éviter que la fragmentation revienne vite
+                command.CommandText = $"ALTER INDEX ALL ON [{schemaName}].[{tableName}] REORGANIZE";
                 return await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }
