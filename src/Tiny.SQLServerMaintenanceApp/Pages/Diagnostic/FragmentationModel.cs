@@ -7,22 +7,26 @@ namespace Tiny.SQLServerMaintenanceApp
 {
     public class FragmentationModel : ObservableObject
     {
-        private readonly ObservableCollection<Index> _indices;
+        private readonly ObservableCollection<Index> _indexes;
         public FragmentationModel(Fragmentation statistiques)
         {
             SchemaName = statistiques.SchemaName;
             TableName = statistiques.TableName;
-            _indices = new ObservableCollection<Index>();
-            _indices.Add(new Index(statistiques.IndexName, statistiques.FragmentationInPercent));
+            _indexes = new ObservableCollection<Index>();
+
+            foreach (var index in statistiques.Indexes)
+            {
+                _indexes.Add(new Index(index.IndexName, index.FragmentationInPercent));
+            }
         }
 
         public string SchemaName { get; private set; }
         public string TableName { get; private set; }
-        public IEnumerable<Index> Indexes { get { return _indices; } }
+        public IEnumerable<Index> Indexes { get { return _indexes; } }
 
         public void Add(Index index)
         {
-            _indices.Add(index);
+            _indexes.Add(index);
             RaisePropertyChanged(nameof(MaxFragmentation));
         }
 
@@ -38,17 +42,5 @@ namespace Tiny.SQLServerMaintenanceApp
                 return Indexes.Max(f => f.FragmentationInPercent);
             }
         }
-    }
-
-    public class Index
-    {
-        public Index(string indexName, double fragmentationInPercent)
-        {
-            IndexName = indexName;
-            FragmentationInPercent = fragmentationInPercent;
-        }
-
-        public string IndexName { get; private set; }
-        public double FragmentationInPercent { get; private set; }
     }
 }
