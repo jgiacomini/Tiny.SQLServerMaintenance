@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,13 +58,17 @@ namespace Tiny.SQLServerMaintenanceApp
                     {
                         while (await reader.ReadAsync().ConfigureAwait(false))
                         {
-                            result.Add(new Fragmentation()
+                            var schemaName = ReadString(reader["SchemaName"]);
+                            var tableName = ReadString(reader["TableName"]);
+                            Fragmentation fragmentation = result.FirstOrDefault(f => f.SchemaName == schemaName && f.TableName == tableName);
+
+                            if (fragmentation == null)
                             {
-                                FragmentationInPercent = (double)reader["FragmentationInPercent"],
-                                SchemaName = ReadString(reader["SchemaName"]),
-                                TableName = ReadString(reader["TableName"]),
-                                IndexName = ReadString(reader["IndexName"]),
-                            });
+                                fragmentation = new Fragmentation(schemaName, tableName);
+                                result.Add(fragmentation);
+                            }
+
+                            fragmentation.Add(new Index(ReadString(reader["IndexName"]), (double)reader["FragmentationInPercent"]));
                         }
                     }
                 }
