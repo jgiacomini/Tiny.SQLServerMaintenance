@@ -84,7 +84,7 @@ namespace Tiny.SQLServerMaintenanceApp
                 command.CommandTimeout = (int)TimeSpan.FromDays(1).TotalSeconds;
                 await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-                // laisse 20% de place par page pour éviter que la fragmentation revienne vite
+                // FILLFACTOR => laisse 20% de place par page pour éviter que la fragmentation revienne vite
                 command.CommandText = $"ALTER INDEX ALL ON [{schemaName}].[{tableName}] REBUILD WITH (FILLFACTOR = 80, SORT_IN_TEMPDB = ON, STATISTICS_NORECOMPUTE = ON, ONLINE = ON);";
                 return await command.ExecuteNonQueryAsync(cancellationToken);
             }
@@ -98,7 +98,6 @@ namespace Tiny.SQLServerMaintenanceApp
                 command.CommandTimeout = (int)TimeSpan.FromDays(1).TotalSeconds;
                 await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-                // laisse 20% de place par page pour éviter que la fragmentation revienne vite
                 command.CommandText = $"ALTER INDEX ALL ON [{schemaName}].[{tableName}] REORGANIZE";
                 return await command.ExecuteNonQueryAsync(cancellationToken);
             }
