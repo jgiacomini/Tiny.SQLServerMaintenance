@@ -44,16 +44,7 @@ namespace Tiny.SQLServerMaintenanceApp
                 Fragmentations.Clear();
                 foreach (var item in fragmentations)
                 {
-                    var existingModel = Fragmentations.FirstOrDefault(f => f.SchemaName == item.TableName || f.TableName == item.TableName);
-
-                    if (existingModel == null)
-                    {
-                        Fragmentations.Add(new FragmentationModel(item));
-                    }
-                    else
-                    {
-                        existingModel.Add(new Index(item.IndexName, item.FragmentationInPercent));
-                    }
+                    Fragmentations.Add(new FragmentationModel(item));
                 }
             }
             catch (System.Exception)
