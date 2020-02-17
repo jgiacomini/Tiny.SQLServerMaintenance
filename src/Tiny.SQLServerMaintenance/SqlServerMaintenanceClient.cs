@@ -76,7 +76,7 @@ namespace Tiny.SQLServerMaintenanceApp
             }
         }
 
-        public async Task<int> RebuilFragmentationAsync(string schemaName, string tableName, CancellationToken cancellationToken = default)
+        public async Task<int> RebuildFragmentationAsync(string schemaName, string tableName, CancellationToken cancellationToken = default)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -85,7 +85,7 @@ namespace Tiny.SQLServerMaintenanceApp
                 await command.Connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
                 // laisse 20% de place par page pour éviter que la fragmentation revienne vite
-                command.CommandText = $"ALTER INDEX ALL ON [{schemaName}].[{tableName}] REBUILD WITH (FILLFACTOR = 80);";
+                command.CommandText = $"ALTER INDEX ALL ON [{schemaName}].[{tableName}] REBUILD WITH (FILLFACTOR = 80, SORT_IN_TEMPDB = ON, STATISTICS_NORECOMPUTE = ON, ONLINE = ON);";
                 return await command.ExecuteNonQueryAsync(cancellationToken);
             }
         }

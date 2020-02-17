@@ -69,7 +69,7 @@ namespace Tiny.SQLServerMaintenanceApp
             {
                 if (fragmentation.MaxFragmentation > 50)
                 {
-                    await sqlServerMaintenanceClient.RebuilFragmentationAsync(fragmentation.SchemaName, fragmentation.TableName).ConfigureAwait(false);
+                    await sqlServerMaintenanceClient.RebuildFragmentationAsync(fragmentation.SchemaName, fragmentation.TableName).ConfigureAwait(false);
                 }
                 else if (fragmentation.MaxFragmentation > 30)
                 {
